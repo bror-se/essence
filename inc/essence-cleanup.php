@@ -9,7 +9,6 @@
  */
 
 $theme_name = next( explode('/themes/', get_stylesheet_directory() ) );
-$theme_data = get_theme_data( ABSPATH . 'wp-content/themes/' . $theme_name . '/style.css' );
 
 /**
  * Flush rewrite rules
@@ -33,7 +32,7 @@ update_option( 'uploads_use_yearmonth_folders', 0 );
 update_option( 'upload_path', 'assets' );
 
 /**
- * Apply rewrites (does not work for child themes)
+ * Apply rewrites (won't apply for child themes)
  */
 function essence_add_rewrites( $content ) {
   $theme_name = next( explode( '/themes/', get_stylesheet_directory() ) );
@@ -73,7 +72,7 @@ function essence_clean_plugins( $content ) {
 /**
  * Only use clean URLs if the theme isn't a child or an MU (Network) install
  */
-if ( ( !defined( 'WP_ALLOW_MULTISITE' ) || ( defined( 'WP_ALLOW_MULTISITE' ) && WP_ALLOW_MULTISITE !== true) ) && $theme_data['Template'] === '' ) {
+if ( (!defined( 'WP_ALLOW_MULTISITE' ) || ( defined( 'WP_ALLOW_MULTISITE' ) && WP_ALLOW_MULTISITE !== true) ) && !is_child_theme() ) {
   add_action( 'generate_rewrite_rules', 'essence_add_rewrites' );
   add_filter( 'plugins_url', 'essence_clean_plugins' );
   add_filter( 'bloginfo', 'essence_clean_assets' );
@@ -121,31 +120,26 @@ function essence_root_relative_url( $input ) {
   );
   return $output;
 }
-add_filter( 'bloginfo_url', 'essence_root_relative_url' );
-add_filter( 'theme_root_uri', 'essence_root_relative_url' );
-add_filter( 'stylesheet_directory_uri', 'essence_root_relative_url' );
-add_filter( 'template_directory_uri', 'essence_root_relative_url' );
-add_filter( 'the_permalink', 'essence_root_relative_url' );
-add_filter( 'wp_list_pages', 'essence_root_relative_url' );
-add_filter( 'wp_list_categories', 'essence_root_relative_url' );
-add_filter( 'wp_nav_menu', 'essence_root_relative_url' );
-add_filter( 'wp_get_attachment_url', 'essence_root_relative_url' );
-add_filter( 'wp_get_attachment_link', 'essence_root_relative_url' );
-add_filter( 'the_content_more_link', 'essence_root_relative_url' );
-add_filter( 'the_tags', 'essence_root_relative_url' );
-add_filter( 'get_pagenum_link', 'essence_root_relative_url' );
-add_filter( 'get_comment_link', 'essence_root_relative_url' );
-add_filter( 'month_link', 'essence_root_relative_url' );
-add_filter( 'day_link', 'essence_root_relative_url' );
-add_filter( 'year_link', 'essence_root_relative_url' );
-add_filter( 'tag_link', 'essence_root_relative_url' );
-add_filter( 'the_author_posts_link', 'essence_root_relative_url' );
-
-/**
- * Leaving plugins_url alone in admin to avoid potential issues
- */
 if ( !is_admin() ) {
-  add_filter( 'plugins_url', 'essence_root_relative_url' );
+  add_filter( 'bloginfo_url', 'essence_root_relative_url' );
+  add_filter( 'theme_root_uri', 'essence_root_relative_url' );
+  add_filter( 'stylesheet_directory_uri', 'essence_root_relative_url' );
+  add_filter( 'template_directory_uri', 'essence_root_relative_url' );
+  add_filter( 'the_permalink', 'essence_root_relative_url' );
+  add_filter( 'wp_list_pages', 'essence_root_relative_url' );
+  add_filter( 'wp_list_categories', 'essence_root_relative_url' );
+  add_filter( 'wp_nav_menu', 'essence_root_relative_url' );
+  add_filter( 'wp_get_attachment_url', 'essence_root_relative_url' );
+  add_filter( 'wp_get_attachment_link', 'essence_root_relative_url' );
+  add_filter( 'the_content_more_link', 'essence_root_relative_url' );
+  add_filter( 'the_tags', 'essence_root_relative_url' );
+  add_filter( 'get_pagenum_link', 'essence_root_relative_url' );
+  add_filter( 'get_comment_link', 'essence_root_relative_url' );
+  add_filter( 'month_link', 'essence_root_relative_url' );
+  add_filter( 'day_link', 'essence_root_relative_url' );
+  add_filter( 'year_link', 'essence_root_relative_url' );
+  add_filter( 'tag_link', 'essence_root_relative_url' );
+  add_filter( 'the_author_posts_link', 'essence_root_relative_url' );
 }
 
 /**
