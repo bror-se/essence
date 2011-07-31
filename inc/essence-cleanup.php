@@ -114,18 +114,22 @@ add_filter( 'the_generator', 'essence_no_generator' );
  */
 function essence_noindex() {
   if ( get_option( 'blog_public' ) === '0' )
-  echo '<meta name="robots" content="noindex, nofollow">', "\n";
+    echo '<meta name="robots" content="noindex, nofollow">', "\n";
 }
 
 /**
  * Add canonical link to head
  */
 function essence_rel_canonical() {
-  if ( !is_singular() )
+  if ( !is_singular() ) {
     return;
+  }
+
   global $wp_the_query;
-  if ( !$id = $wp_the_query->get_queried_object_id() )
+  if ( !$id = $wp_the_query->get_queried_object_id() ) {
     return;
+  }
+
   $link = get_permalink( $id );
   echo "\t<link rel=\"canonical\" href=\"$link\">\n";
 }
