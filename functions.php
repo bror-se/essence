@@ -34,8 +34,6 @@ if ( ! function_exists( 'essence_setup' ) ):
 function essence_setup() {
   // Make Essense available for translation.
   // Translations can be added to the /lang/ directory.
-  // If you're building a theme based on Essence, use a find and replace
-  // to change 'twentyeleven' to the name of your theme in all the template files.
   load_theme_textdomain( THEME_NAME, get_template_directory() . '/languages' );
 
   // This theme styles the visual editor with editor-style.css to match the theme style.
