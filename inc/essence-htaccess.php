@@ -19,7 +19,7 @@ if ( stristr( $_SERVER['SERVER_SOFTWARE'], 'apache' ) !== false ) {
   }
   add_action( 'admin_init', 'essence_htaccess_writable' );
 
-$theme_name = next( explode('/themes/', get_stylesheet_directory() ) );
+$theme_name = next( explode( '/themes/', get_stylesheet_directory() ) );
 
 /**
  * Flush rewrite rules
