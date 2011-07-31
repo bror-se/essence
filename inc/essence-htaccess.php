@@ -17,7 +17,8 @@ if ( stristr( $_SERVER['SERVER_SOFTWARE'], 'apache' ) !== false ) {
       add_action( 'admin_notices', create_function( '', "echo '<div class=\"error\"><p>" . sprintf( __( 'Please make sure your <a href="%s">.htaccess</a> file is writeable ', THEME_NAME ), admin_url( 'options-permalink.php' ) ) . "</p></div>';" ) );
     };
   }
-  add_action( 'admin_init', 'essence_htaccess_writable' );
+}
+add_action( 'admin_init', 'essence_htaccess_writable' );
 
 $theme_name = next( explode( '/themes/', get_stylesheet_directory() ) );
 
