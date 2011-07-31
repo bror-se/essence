@@ -313,30 +313,30 @@ add_shortcode( 'gallery', 'essence_gallery_shortcode' );
 /**
  * Removes empty span
  */
-function essence_remove_empty_read_more_span($content) {
-  return eregi_replace("(<p><span id=\"more-[0-9]{1,}\"></span></p>)", "", $content);
+function essence_remove_empty_read_more_span( $content ) {
+  return eregi_replace( "( <p><span id=\"more-[0-9]{1,}\"></span></p> )", "", $content );
 }
-add_filter('the_content', 'essence_remove_empty_read_more_span');
+add_filter( 'the_content', 'essence_remove_empty_read_more_span' );
 
 /**
  * Removes url hash to avoid the jump link
  */
-function essence_remove_more_jump_link($link) {
-   $offset = strpos($link, '#more-');
-   if ($offset) {
-      $end = strpos($link, '"',$offset);
+function essence_remove_more_jump_link( $link ) {
+   $offset = strpos( $link, '#more-' );
+   if ( $offset ) {
+      $end = strpos( $link, '"',$offset );
    }
-   if ($end) {
-      $link = substr_replace($link, '', $offset, $end-$offset);
+   if ( $end ) {
+      $link = substr_replace( $link, '', $offset, $end-$offset );
    }
    return $link;
 }
-add_filter('the_content_more_link', 'essence_remove_more_jump_link');
+add_filter( 'the_content_more_link', 'essence_remove_more_jump_link' );
 
 /**
  * Remove container from menus.
  */
-function essence_nav_menu_args($args = '') {
+function essence_nav_menu_args( $args = '' ) {
   $args['container'] = false;
   return $args;
 }
@@ -345,11 +345,11 @@ function essence_nav_menu_args($args = '') {
  * Custom Walker for cleaner menu output
  */
 class essence_nav_walker extends Walker_Nav_Menu {
-  function start_el(&$output, $item, $depth, $args) {
+  function start_el( &$output, $item, $depth, $args ) {
     global $wp_query;
       $indent = ( $depth ) ? str_repeat( "\t", $depth ) : '';
 
-      $slug = sanitize_title($item->title);
+      $slug = sanitize_title( $item->title );
 
       $class_names = $value = '';
       $classes = empty( $item->classes ) ? array() : (array) $item->classes;
