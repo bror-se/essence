@@ -68,25 +68,23 @@
 	<?php if ( get_option('comment_registration') && !is_user_logged_in() ) : ?>
 	<p><?php printf( __('You must be <a href="%s">logged in</a> to post a comment.', THEME_NAME), wp_login_url( get_permalink() ) ); ?></p>
 	<?php else : ?>
-	<fieldset>
-		<form action="<?php echo get_option('siteurl'); ?>/wp-comments-post.php" method="post" id="commentform">
-			<?php if ( is_user_logged_in() ) : ?>
-				<p><?php printf(__('Logged in as <a href="%s/wp-admin/profile.php">%s</a>.', THEME_NAME), get_option('siteurl'), $user_identity); ?> <a href="<?php echo wp_logout_url(get_permalink()); ?>" title="<?php __('Log out of this account', THEME_NAME); ?>"><?php _e('Log out &raquo;', THEME_NAME); ?></a></p>
-			<?php else : ?>
-				<label for="author"><?php _e('Name', THEME_NAME); if ($req) _e(' (required)', THEME_NAME); ?></label>
-				<input type="text" class="text" name="author" id="author" value="<?php echo esc_attr($comment_author); ?>" size="22" tabindex="1" <?php if ($req) echo "aria-required='true'"; ?>>
-				<label for="email"><?php _e('Email (will not be published)', THEME_NAME); if ($req) _e(' (required)', THEME_NAME); ?></label>
-				<input type="email" class="text" name="email" id="email" value="<?php echo esc_attr($comment_author_email); ?>" size="22" tabindex="2" <?php if ($req) echo "aria-required='true'"; ?>>
-				<label for="url"><?php _e('Website', THEME_NAME); ?></label>
-				<input type="url" class="text" name="url" id="url" value="<?php echo esc_attr($comment_author_url); ?>" size="22" tabindex="3">
-			<?php endif; ?>
-			<label for="comment"><?php _e('Comment', THEME_NAME); ?></label>
-			<textarea name="comment" id="comment" tabindex="4"></textarea>
-			<input name="submit" class="button" type="submit" id="submit" tabindex="5" value="<?php _e('Submit Comment', THEME_NAME); ?>">
-			<?php comment_id_fields(); ?>
-			<?php do_action('comment_form', $post->ID); ?>
-		</form>
-	</fieldset>
+	<form action="<?php echo get_option('siteurl'); ?>/wp-comments-post.php" method="post" id="commentform">
+		<?php if ( is_user_logged_in() ) : ?>
+			<p><?php printf(__('Logged in as <a href="%s/wp-admin/profile.php">%s</a>.', THEME_NAME), get_option('siteurl'), $user_identity); ?> <a href="<?php echo wp_logout_url(get_permalink()); ?>" title="<?php __('Log out of this account', THEME_NAME); ?>"><?php _e('Log out &raquo;', THEME_NAME); ?></a></p>
+		<?php else : ?>
+			<label for="author"><?php _e('Name', THEME_NAME); if ($req) _e(' (required)', THEME_NAME); ?></label>
+			<input type="text" class="text" name="author" id="author" value="<?php echo esc_attr($comment_author); ?>" size="22" tabindex="1" <?php if ($req) echo "aria-required='true'"; ?>>
+			<label for="email"><?php _e('Email (will not be published)', THEME_NAME); if ($req) _e(' (required)', THEME_NAME); ?></label>
+			<input type="email" class="text" name="email" id="email" value="<?php echo esc_attr($comment_author_email); ?>" size="22" tabindex="2" <?php if ($req) echo "aria-required='true'"; ?>>
+			<label for="url"><?php _e('Website', THEME_NAME); ?></label>
+			<input type="url" class="text" name="url" id="url" value="<?php echo esc_attr($comment_author_url); ?>" size="22" tabindex="3">
+		<?php endif; ?>
+		<label for="comment"><?php _e('Comment', THEME_NAME); ?></label>
+		<textarea name="comment" id="comment" tabindex="4"></textarea>
+		<input name="submit" class="button" type="submit" id="submit" tabindex="5" value="<?php _e('Submit Comment', THEME_NAME); ?>">
+		<?php comment_id_fields(); ?>
+		<?php do_action('comment_form', $post->ID); ?>
+	</form>
 	<?php endif; // If registration required and not logged in ?>
 </section>
 <?php endif; // if you delete this the sky will fall on your head ?>
