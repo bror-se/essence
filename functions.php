@@ -19,9 +19,8 @@ define( 'THEME_JS_DIR', THEME_URL . '/js' );
 define( 'THEME_IMG_DIR', THEME_URL . '/img' );
 define( 'THEME_FONT_DIR', THEME_URL . '/font' );
 
-require( dirname( __FILE__ ) . '/inc/essence-admin.php' );        # Admin functions
 require( dirname( __FILE__ ) . '/inc/essence-cleanup.php' );      # Code cleanup/removal
-require( dirname( __FILE__ ) . '/inc/essence-htaccess.php' );     # Add our own htaccess
+require( dirname( __FILE__ ) . '/inc/essence-htaccess.php' );     # Rewrites and h5bp htaccess
 
 /**
  * Tell WordPress to run essence_setup() when the 'after_setup_theme' hook is run.
@@ -212,31 +211,5 @@ function essence_body_classes( $classes ) {
   return $classes;
 }
 add_filter( 'body_class', 'essence_body_classes' );
-
-/**
- * Add to robots.txt
- * http://codex.wordpress.org/Search_Engine_Optimization_for_WordPress#Robots.txt_Optimization
- */
-function essence_robots() {
-  echo "Disallow: /cgi-bin\n";
-  echo "Disallow: /wp-admin\n";
-  echo "Disallow: /wp-includes\n";
-  echo "Disallow: /wp-content/plugins\n";
-  echo "Disallow: /plugins\n";
-  echo "Disallow: /wp-content/cache\n";
-  echo "Disallow: /wp-content/themes\n";
-  echo "Disallow: /trackback\n";
-  echo "Disallow: /feed\n";
-  echo "Disallow: /comments\n";
-  echo "Disallow: /category/*/*\n";
-  echo "Disallow: */trackback\n";
-  echo "Disallow: */feed\n";
-  echo "Disallow: */comments\n";
-  echo "Disallow: /*?*\n";
-  echo "Disallow: /*?\n";
-  echo "Allow: /wp-content/uploads\n";
-  echo "Allow: /assets";
-}
-add_action( 'do_robots', 'essence_robots' );
 
 ?>
