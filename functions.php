@@ -19,8 +19,8 @@ define( 'THEME_JS_DIR', THEME_URL . '/js' );
 define( 'THEME_IMG_DIR', THEME_URL . '/img' );
 define( 'THEME_FONT_DIR', THEME_URL . '/font' );
 
-require( dirname( __FILE__ ) . '/inc/essence-cleanup.php' );      # Code cleanup/removal
-require( dirname( __FILE__ ) . '/inc/essence-htaccess.php' );     # Rewrites and h5bp htaccess
+require_once( dirname( __FILE__ ) . '/inc/essence-cleanup.php' );      # Code cleanup/removal
+require_once( dirname( __FILE__ ) . '/inc/essence-htaccess.php' );     # Rewrites and h5bp htaccess
 
 /**
  * Tell WordPress to run essence_setup() when the 'after_setup_theme' hook is run.
@@ -32,6 +32,12 @@ if ( ! function_exists( 'essence_setup' ) ):
  * Sets up theme defaults and registers support for various WordPress features.
  */
 function essence_setup() {
+  // Make Essense available for translation.
+  // Translations can be added to the /lang/ directory.
+  // If you're building a theme based on Essence, use a find and replace
+  // to change 'twentyeleven' to the name of your theme in all the template files.
+  load_theme_textdomain( THEME_NAME, get_template_directory() . '/languages' );
+
   // This theme styles the visual editor with editor-style.css to match the theme style.
   add_editor_style();
 
@@ -63,25 +69,6 @@ function essence_setup() {
   ) );
 }
 endif;
-
-/**
- * Remove languages dir and set lang="en" as default (rather than en-US)
- */
-function essence_language_attributes() {
-  $attributes = array();
-  $output = '';
-  $lang = get_bloginfo( 'language' );
-  if ( $lang && $lang !== 'en-US' ) {
-    $attributes[] = "lang=\"$lang\"";
-  } else {
-    $attributes[] = 'lang="en"';
-  }
-
-  $output = implode( ' ', $attributes );
-  $output = apply_filters( 'essence_language_attributes', $output );
-  return $output;
-}
-add_filter( 'language_attributes', 'essence_language_attributes' );
 
 /**
  * Register our sidebars and widgetized areas.

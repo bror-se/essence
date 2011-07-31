@@ -83,6 +83,25 @@ function essence_relative_feed_urls() {
 add_action( 'pre_get_posts', 'essence_relative_feed_urls' );
 
 /**
+ * Remove languages dir and set lang="en" as default (rather than en-US)
+ */
+function essence_language_attributes() {
+  $attributes = array();
+  $output = '';
+  $lang = get_bloginfo( 'language' );
+  if ( $lang && $lang !== 'en-US' ) {
+    $attributes[] = "lang=\"$lang\"";
+  } else {
+    $attributes[] = 'lang="en"';
+  }
+
+  $output = implode( ' ', $attributes );
+  $output = apply_filters( 'essence_language_attributes', $output );
+  return $output;
+}
+add_filter( 'language_attributes', 'essence_language_attributes' );
+
+/**
  * Remove WordPress version from RSS feed
  */
 function essence_no_generator() {
