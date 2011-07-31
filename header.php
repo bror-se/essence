@@ -20,7 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/css/style.css">
-  <script src="<?php echo get_template_directory_uri(); ?>/js/libs/modernizr-2.0.min.js"></script>
+  <script src="<?php echo get_template_directory_uri(); ?>/js/libs/modernizr-2.0.6.min.js"></script>
   <script src="<?php echo get_template_directory_uri(); ?>/js/libs/respond.min.js"></script>
 
   <?php
