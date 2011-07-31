@@ -19,9 +19,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/css/style.css">
-  <script src="<?php echo get_template_directory_uri(); ?>/js/libs/modernizr-2.0.6.min.js"></script>
-  <script src="<?php echo get_template_directory_uri(); ?>/js/libs/respond.min.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/libs/modernizr-2.0.6.min.js"></script>
 
   <?php
     if ( is_singular() && get_option( 'thread_comments' ) )
