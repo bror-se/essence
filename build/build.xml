@@ -624,10 +624,8 @@
                 </replaceregexp>
             </then>
             <else>
-                <replaceregexp match="href=[&quot;']([\/]?)${dir.css}\/style.css[&quot;']"
-                               replace="href=&quot;\1${style.css}&quot;" flags="g">
-                    <fileset dir="./${dir.intermediate}" includes="${page-files}"/>
-                </replaceregexp>
+                <replace token="href=&quot;&lt;?php echo get_template_directory_uri(); ?&gt;/${dir.css}/style.css&quot;" value="href=&quot;&lt;?php echo get_template_directory_uri(); ?&gt;/${style.css}&quot;"
+                         dir="${dir.intermediate}" includes="${page-files}"/>
             </else>
         </if>
     </target>
