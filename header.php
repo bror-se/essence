@@ -8,7 +8,6 @@
  * @subpackage Essence
  */
 ?><!doctype html>
-
 <head>
   <meta charset="<?php bloginfo( 'charset' ); ?>">
 
