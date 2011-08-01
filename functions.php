@@ -49,7 +49,9 @@ function essence_setup() {
   add_theme_support( 'menus' );
 
   // This theme uses Featured Images (also known as post thumbnails) for per-post/per-page Custom Header images
+  // http://codex.wordpress.org/Post_Thumbnails
   add_theme_support( 'post-thumbnails' );
+  // set_post_thumbnail_size( 150, 150, false );
 
   // This theme uses wp_nav_menu().
   register_nav_menus( array(
