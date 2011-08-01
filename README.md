@@ -14,8 +14,8 @@ This is a barebones theme for Wordpress that's based on [HTML5 Boilerplate](http
 ### v.0.9 - August 2nd, 2011
 
 <ul>
-  <li>Integrated [HTML5 Boilerplate](http://www.html5boilerplate.com/)</li>
-  <li>Stripped and included features from the [Roots Theme](http://www.rootstheme.com/)</li>
+  <li>Integrated HTML5 Boilerplate</li>
+  <li>Stripped and included features from the Roots Theme</li>
 </ul>
 
 ## Licence:
