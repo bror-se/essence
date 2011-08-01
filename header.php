@@ -8,19 +8,16 @@
  * @subpackage Essence
  */
 ?><!doctype html>
-<!--[if lt IE 7]> <html <?php language_attributes(); ?> class="no-js ie6 oldie"> <![endif]-->
-<!--[if IE 7]>    <html <?php language_attributes(); ?> class="no-js ie7 oldie"> <![endif]-->
-<!--[if IE 8]>    <html <?php language_attributes(); ?> class="no-js ie8 oldie"> <![endif]-->
-<!--[if gt IE 8]><!--> <html <?php language_attributes(); ?> class="no-js"> <!--<![endif]-->
+
 <head>
   <meta charset="<?php bloginfo( 'charset' ); ?>">
 
   <title><?php wp_title( '|', true, 'right' ); bloginfo( 'name' ); ?></title>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="stylesheet" href="/css/style.css">
-  <script src="/js/libs/modernizr-2.0.6.min.js"></script>
+  <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/css/style.css">
+  <script src="<?php echo get_template_directory_uri(); ?>/js/libs/modernizr-2.0.6.min.js"></script>
 
   <?php
     if ( is_singular() && get_option( 'thread_comments' ) )

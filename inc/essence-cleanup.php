@@ -174,12 +174,9 @@ function essence_head_cleanup() {
 
   // Deregister l10n.js (new since WordPress 3.1)
   // Why you might want to keep it: http://wordpress.stackexchange.com/questions/5451/what-does-l10n-js-do-in-wordpress-3-1-and-how-do-i-remove-it/5484#5484
-  if ( !is_admin() ) {
-    wp_deregister_script( 'l10n' );
-  }
-
   // Don't load jQuery through WordPress since it's already linked in footer.php
   if ( !is_admin() ) {
+    wp_deregister_script( 'l10n' );
     wp_deregister_script( 'jquery' );
     wp_register_script( 'jquery', '', '', true );
   }
