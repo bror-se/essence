@@ -15,7 +15,13 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- CSS concatenated and minified via ant build script-->
   <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/css/style.css">
+  <!-- end CSS-->
+
+  <!-- All JavaScript at the bottom, except for Modernizr / Respond.
+       Modernizr enables HTML5 elements & feature detects; Respond is a polyfill for min/max-width CSS3 Media Queries
+       For optimal performance, use a custom Modernizr build: www.modernizr.com/download/ -->
   <script src="<?php echo get_template_directory_uri(); ?>/js/libs/modernizr-2.0.6.min.js"></script>
 
   <?php
