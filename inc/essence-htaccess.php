@@ -82,12 +82,14 @@ function essence_clean_plugins( $content ) {
 /**
  * Only use clean URLs if the theme isn't a child or an MU (Network) install
  */
-if ( ( !defined( 'WP_ALLOW_MULTISITE' ) || ( defined( 'WP_ALLOW_MULTISITE' ) && WP_ALLOW_MULTISITE !== true ) ) && !is_child_theme() ) {
+if (!is_multisite() && !is_child_theme()) {
   add_action( 'generate_rewrite_rules', 'essence_add_rewrites' );
-  add_filter( 'plugins_url', 'essence_clean_plugins' );
-  add_filter( 'bloginfo', 'essence_clean_assets' );
-  add_filter( 'stylesheet_directory_uri', 'essence_clean_assets' );
-  add_filter( 'template_directory_uri', 'essence_clean_assets' );
+  if ( !is_admin() ) {
+    add_filter( 'plugins_url', 'essence_clean_plugins' );
+    add_filter( 'bloginfo', 'essence_clean_assets' );
+    add_filter( 'stylesheet_directory_uri', 'essence_clean_assets' );
+    add_filter( 'template_directory_uri', 'essence_clean_assets' );
+  }
 }
 
 /**
