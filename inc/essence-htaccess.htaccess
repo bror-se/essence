@@ -69,7 +69,6 @@
 # Proper MIME type for all files
 # ----------------------------------------------------------------------
 
-
 # JavaScript
 #   Normalize to standard type (it's sniffed in IE anyways)
 #   tools.ietf.org/html/rfc4329#section-7.2
@@ -126,7 +125,7 @@ AddType text/x-vcard                   vcf
 #  Options +Includes
 #  AddOutputFilterByType INCLUDES application/javascript application/json
 #  SetOutputFilter INCLUDES
-#</FilesMatch>s
+#</FilesMatch>
 #<FilesMatch "\.combined\.css$">
 #  Options +Includes
 #  AddOutputFilterByType INCLUDES text/css
@@ -425,25 +424,21 @@ AddCharset utf-8 .html .css .js .xml .json .rss .atom
 # A little more security
 # ----------------------------------------------------------------------
 
-
 # Do we want to advertise the exact version number of Apache we're running?
 # Probably not.
 ## This can only be enabled if used in httpd.conf - It will not work in .htaccess
 # ServerTokens Prod
-
 
 # "-Indexes" will have Apache block users from browsing folders without a default document
 # Usually you should leave this activated, because you shouldn't allow everybody to surf through
 # every folder on your server (which includes rather private places like CMS system folders).
 Options -Indexes
 
-
 # Block access to "hidden" directories whose names begin with a period. This
 # includes directories used by version control systems such as Subversion or Git.
 <IfModule mod_rewrite.c>
   RewriteRule "(^|/)\." - [F]
 </IfModule>
-
 
 # If your server is not already configured as such, the following directive
 # should be uncommented in order to set PHP's register_globals option to OFF.
