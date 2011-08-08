@@ -12,10 +12,10 @@
  * Redirect /?s to /search/
  * http://txfx.net/wordpress-plugins/nice-search/
  */
-function essence_search_redirect() {
+function essence_nice_search_redirect() {
   if ( is_search() && strpos( $_SERVER['REQUEST_URI'], '/wp-admin/' ) === false && strpos( $_SERVER['REQUEST_URI'], '/search/' ) === false ) {
     wp_redirect( home_url( '/search/' . str_replace( array( ' ', '%20' ), array( '+', '+' ), urlencode( get_query_var( 's' ) ) ) ), 301 );
-    exit();
+      exit();
   }
 }
 add_action( 'template_redirect', 'essence_search_redirect' );
@@ -40,7 +40,7 @@ function essence_root_relative_url( $input ) {
       // if full URL is site_url, return a slash for relative root
       'if ( isset( $matches[0] ) && $matches[0] === site_url() ) { return "/";' .
       // if domain is equal to site_url, then make URL relative
-      '} elseif ( isset( $matches[1] ) && strpos( $matches[1], site_url() ) !== false ) { return "$matches[2]";' .
+      '} elseif ( isset( $matches[0] ) && strpos( $matches[0], site_url() ) !== false ) { return $matches[2];' .
       // if domain is not equal to site_url, do not make external link relative
       '} else { return $matches[0]; };'
     ),
@@ -73,14 +73,13 @@ if ( !is_admin() ) {
 /**
  * Remove root relative URLs on any attachments in the feed
  */
-function essence_relative_feed_urls() {
-  global $wp_query;
-  if ( is_feed() ) {
-    remove_filter( 'wp_get_attachment_url', 'essence_root_relative_url' );
-    remove_filter( 'wp_get_attachment_link', 'essence_root_relative_url' );
+function essence_root_relative_attachment_urls() {
+  if ( !is_feed() ) {
+    add_filter( 'wp_get_attachment_url', 'essence_root_relative_url' );
+    add_filter( 'wp_get_attachment_link', 'essence_root_relative_url' );
   }
 }
-add_action( 'pre_get_posts', 'essence_relative_feed_urls' );
+add_action( 'pre_get_posts', 'essence_root_relative_attachment_urls' );
 
 /**
  * Remove languages dir and set lang="en" as default (rather than en-US)
@@ -113,8 +112,9 @@ add_filter( 'the_generator', 'essence_no_generator' );
  * Function to hide blog from search engines
  */
 function essence_noindex() {
-  if ( get_option( 'blog_public' ) === '0' )
-    echo '<meta name="robots" content="noindex, nofollow">', "\n";
+  if ( get_option( 'blog_public' ) === '0' ) {
+    echo '<meta name="robots" content="noindex,nofollow">', "\n";
+  }
 }
 
 /**
@@ -414,13 +414,28 @@ function essence_robots() {
 add_action( 'do_robots', 'essence_robots' );
 
 /**
+ * We don't need to self-close these tags in html5:
+ * <img>, <input>
+ */
+function essence_remove_self_closing_tags( $input ) {
+  return str_replace( ' />', '>', $input );
+}
+add_filter('get_avatar', 'essence_remove_self_closing_tags');
+add_filter('comment_id_fields', 'essence_remove_self_closing_tags');
+
+/**
  * Check to see if the tagline is set to default
  * Show an admin notice to update if it hasn't been changed
  * You want to change this or remove it because it's used as the description in the RSS feed
  */
+function essence_notice_tagline() {
+  echo '<div class="error">';
+  echo '<p>' . sprintf( __( 'Please update your <a href="%s">site tagline</a>', THEME_NAME ), admin_url( 'options-general.php' ) ) . '</p>';
+  echo '</div>';
+}
 if ( get_option( 'blogdescription' ) === 'Just another WordPress site' ) {
-  add_action( 'admin_notices', create_function( '', "echo '<div class=\"error\"><p>" . sprintf(__( 'Please update your <a href="%s">site tagline</a>', THEME_NAME ), admin_url( 'options-general.php' )) . "</p></div>';" ) );
-};
+  add_action( 'admin_notices', 'essence_notice_tagline' );
+}
 
 /**
  * Set the post revisions to 5 unless the constant
