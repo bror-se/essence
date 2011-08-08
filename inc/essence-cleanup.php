@@ -12,7 +12,7 @@
  * Redirect /?s to /search/
  * http://txfx.net/wordpress-plugins/nice-search/
  */
-function essence_nice_search_redirect() {
+function essence_search_redirect() {
   if ( is_search() && strpos( $_SERVER['REQUEST_URI'], '/wp-admin/' ) === false && strpos( $_SERVER['REQUEST_URI'], '/search/' ) === false ) {
     wp_redirect( home_url( '/search/' . str_replace( array( ' ', '%20' ), array( '+', '+' ), urlencode( get_query_var( 's' ) ) ) ), 301 );
       exit();
