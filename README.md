@@ -11,6 +11,10 @@ This is a barebones theme for Wordpress that's based on [HTML5 Boilerplate](http
 
 ## Changelog:
 
+### v.1.0 - August 11th, 2011
+
+* Details are coming your way very soon
+
 ### v.0.9 - August 2nd, 2011
 
 <ul>
