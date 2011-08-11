@@ -8,6 +8,11 @@
  * @subpackage Essence
  */
 ?><!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" <?php language_attributes(); ?>> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" <?php language_attributes(); ?>> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" <?php language_attributes(); ?>> <![endif]-->
+<!-- Consider adding an manifest.appcache: h5bp.com/d/Offline -->
+<!--[if gt IE 8]><!--> <html class="no-js" <?php language_attributes(); ?>> <!--<![endif]-->
 <head>
   <meta charset="<?php bloginfo( 'charset' ); ?>">
 
@@ -15,15 +20,21 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
+  <!-- Mobile viewport optimized: j.mp/bplateviewport -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+  <!-- CSS: implied media=all -->
   <!-- CSS concatenated and minified via ant build script-->
   <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/css/style.css">
   <!-- end CSS-->
 
-  <!-- All JavaScript at the bottom, except for Modernizr / Respond.
+  <!-- More ideas for your <head> here: h5bp.com/d/head-Tips -->
+
+  <!-- All JavaScript at the bottom, except for this custom Modernizr build containing Respond.
        Modernizr enables HTML5 elements & feature detects; Respond is a polyfill for min/max-width CSS3 Media Queries
-       For optimal performance, use a custom Modernizr build: www.modernizr.com/download/ -->
+       For optimal performance, create your own custom Modernizr build: www.modernizr.com/download/ -->
   <script src="<?php echo get_template_directory_uri(); ?>/js/libs/modernizr-2.0.6.min.js"></script>
 
   <?php

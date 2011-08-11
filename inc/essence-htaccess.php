@@ -85,10 +85,12 @@ function essence_clean_plugins( $content ) {
 if (!is_multisite() && !is_child_theme()) {
   add_action( 'generate_rewrite_rules', 'essence_add_rewrites' );
   if ( !is_admin() ) {
-    add_filter( 'plugins_url', 'essence_clean_plugins' );
-    add_filter( 'bloginfo', 'essence_clean_assets' );
-    add_filter( 'stylesheet_directory_uri', 'essence_clean_assets' );
-    add_filter( 'template_directory_uri', 'essence_clean_assets' );
+    add_filter('plugins_url', 'essence_clean_plugins');
+    add_filter('bloginfo', 'essence_clean_assets');
+    add_filter('stylesheet_directory_uri', 'essence_clean_assets');
+    add_filter('template_directory_uri', 'essence_clean_assets');
+    add_filter('script_loader_src', 'essence_clean_plugins');
+    add_filter('style_loader_src', 'essence_clean_plugins');
   }
 }
 

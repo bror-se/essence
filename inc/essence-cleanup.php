@@ -34,13 +34,13 @@ add_filter( 'get_search_query', 'essence_search_query' );
  */
 function essence_root_relative_url( $input ) {
   $output = preg_replace_callback(
-    '/(https?:\/\/[^\/|"]+)([^"]+)?/',
+    '!(https?://[^/|"]+)([^"]+)?!',
     create_function(
       '$matches',
       // if full URL is site_url, return a slash for relative root
-      'if ( isset( $matches[0] ) && $matches[0] === site_url() ) { return "/";' .
+      'if (isset($matches[0]) && $matches[0] === site_url()) { return "/";' .
       // if domain is equal to site_url, then make URL relative
-      '} elseif ( isset( $matches[0] ) && strpos( $matches[0], site_url() ) !== false ) { return $matches[2];' .
+      '} elseif (isset($matches[0]) && strpos($matches[0], site_url()) !== false) { return $matches[2];' .
       // if domain is not equal to site_url, do not make external link relative
       '} else { return $matches[0]; };'
     ),
@@ -48,11 +48,32 @@ function essence_root_relative_url( $input ) {
   );
   return $output;
 }
+
+/**
+ * Terrible workaround to remove the duplicate subfolder in the src of JS/CSS tags
+ * Example: /subfolder/subfolder/css/style.css
+ */
+function essence_fix_duplicate_subfolder_urls( $input ) {
+  $output = essence_root_relative_url( $input );
+  preg_match_all( '!([^/]+)/([^/]+)!', $output, $matches );
+  if ( isset( $matches[1] ) && isset( $matches[2] ) ) {
+    if ( $matches[1][0] === $matches[2][0] ) {
+      $output = substr( $output, strlen( $matches[1][0] ) + 1 );
+    }
+  }
+  return $output;
+}
+
+/**
+ * Apply relative URLs
+ */
 if ( !is_admin() ) {
   add_filter( 'bloginfo_url', 'essence_root_relative_url' );
   add_filter( 'theme_root_uri', 'essence_root_relative_url' );
   add_filter( 'stylesheet_directory_uri', 'essence_root_relative_url' );
   add_filter( 'template_directory_uri', 'essence_root_relative_url' );
+  add_filter('script_loader_src', 'essence_fix_duplicate_subfolder_urls');
+  add_filter('style_loader_src', 'essence_fix_duplicate_subfolder_urls');
   add_filter( 'the_permalink', 'essence_root_relative_url' );
   add_filter( 'wp_list_pages', 'essence_root_relative_url' );
   add_filter( 'wp_list_categories', 'essence_root_relative_url' );
@@ -145,10 +166,10 @@ function essence_remove_recent_comments_style() {
 }
 
 /**
- * Remove gallery style
+ * Remove gallery CSS
  */
-function essence_remove_gallery_style($css) {
-  return preg_replace("/<style type='text\/css'>(.*?)<\/style>/s", '', $css);
+function essence_remove_gallery_style( $css ) {
+  return preg_replace( "!<style type='text/css'>(.*?)</style>!s", '', $css );
 }
 
 /**
@@ -420,8 +441,19 @@ add_action( 'do_robots', 'essence_robots' );
 function essence_remove_self_closing_tags( $input ) {
   return str_replace( ' />', '>', $input );
 }
-add_filter('get_avatar', 'essence_remove_self_closing_tags');
-add_filter('comment_id_fields', 'essence_remove_self_closing_tags');
+add_filter( 'get_avatar', 'essence_remove_self_closing_tags' );
+add_filter( 'comment_id_fields', 'essence_remove_self_closing_tags' );
+
+/**
+ * Clean up the default WordPress style tags
+ */
+function essence_clean_style_tag( $input ) {
+  preg_match_all( "!<link rel='stylesheet'\s?(id='[^']+')?\s+href='(.*)' type='text/css' media='(.*)' />!", $input, $matches );
+  //only display media if it's print
+  $media = $matches[3][0] === 'print' ? ' media="print"' : '';
+  return '<link rel="stylesheet" href="' . $matches[2][0] . '"' . $media . '>' . "\n";
+}
+add_filter( 'style_loader_tag', 'essence_clean_style_tag' );
 
 /**
  * Check to see if the tagline is set to default
@@ -430,10 +462,10 @@ add_filter('comment_id_fields', 'essence_remove_self_closing_tags');
  */
 function essence_notice_tagline() {
   echo '<div class="error">';
-  echo '<p>' . sprintf( __( 'Please update your <a href="%s">site tagline</a>', THEME_NAME ), admin_url( 'options-general.php' ) ) . '</p>';
+  echo '<p>', sprintf( __( 'Please update your <a href="%s">site tagline</a>', 'essence' ), admin_url( 'options-general.php' ) ), '</p>';
   echo '</div>';
 }
-if ( get_option( 'blogdescription' ) === 'Just another WordPress site' ) {
+if (get_option( 'blogdescription' ) === 'Just another WordPress site' ) {
   add_action( 'admin_notices', 'essence_notice_tagline' );
 }
 
