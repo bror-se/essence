@@ -13,6 +13,7 @@
     <a href="<?php echo esc_url( __( 'http://wordpress.org/', THEME_NAME ) ); ?>" title="<?php esc_attr_e( 'Semantic Personal Publishing Platform', THEME_NAME ); ?>" rel="generator"><?php printf( __( 'Proudly powered by %s', THEME_NAME ), 'WordPress' ); ?></a>
   </footer>
 
+  <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script src="<?php echo get_template_directory_uri(); ?>/js/libs/jquery-1.6.2.min.js"><\/script>')</script>
 
