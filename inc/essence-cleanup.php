@@ -109,7 +109,7 @@ function essence_language_attributes() {
   $attributes = array();
   $output = '';
   $lang = get_bloginfo( 'language' );
-  if ( $lang && $lang !== 'en-US' ) {
+  if ($lang && $lang !== 'en-US') {
     $attributes[] = "lang=\"$lang\"";
   } else {
     $attributes[] = 'lang="en"';
@@ -124,10 +124,8 @@ add_filter( 'language_attributes', 'essence_language_attributes' );
 /**
  * Remove WordPress version from RSS feed
  */
-function essence_no_generator() {
-  return '';
-}
-add_filter( 'the_generator', 'essence_no_generator' );
+function essence_no_generator() { return ''; }
+add_filter('the_generator', 'essence_no_generator');
 
 /**
  * Function to hide blog from search engines
@@ -443,6 +441,29 @@ function essence_remove_self_closing_tags( $input ) {
 }
 add_filter( 'get_avatar', 'essence_remove_self_closing_tags' );
 add_filter( 'comment_id_fields', 'essence_remove_self_closing_tags' );
+
+/**
+ * Customized wp_link_pages for better markup
+ * Use do_action( 'essence_link_pages' );
+ */
+function essence_link_pages( $args = array () ) {
+  $paged_page_nav = wp_link_pages( array(
+    'before' =>'<nav><ul>',
+    'after' => '</ul></nav>',
+    'link_before' => '<span>',
+    'link_after' => '</span>',
+    'next_or_number' => 'next',
+    'echo' => false
+  ));
+  // Now let's wrap the nav inside <li>-elements
+    $paged_page_nav = str_replace( '<a', '<li><a', $paged_page_nav );
+    $paged_page_nav = str_replace( '</span></a>', '</a></li>', $paged_page_nav );
+    $paged_page_nav = str_replace( '"><span>', '">', $paged_page_nav );
+  // Here I'd need to wrap the currently displayed page element, which could even get a different class
+    $paged_page_nav = str_replace( '<span>', '<li>', $paged_page_nav );
+    $paged_page_nav = str_replace( '</span>', '</li>', $paged_page_nav );
+  echo $paged_page_nav;
+}
 
 /**
  * Clean up the default WordPress style tags

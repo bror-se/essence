@@ -131,29 +131,6 @@ function essence_content_nav() {
 }
 
 /**
- * Customized wp_link_pages for better markup
- * Use do_action( 'essence_link_pages' );
- */
-function essence_link_pages( $args = array () ) {
-  $paged_page_nav = wp_link_pages( array(
-    'before' =>'<nav><ul>',
-    'after' => '</ul></nav>',
-    'link_before' => '<span>',
-    'link_after' => '</span>',
-    'next_or_number' => 'next',
-    'echo' => false
-  ));
-  // Now let's wrap the nav inside <li>-elements
-    $paged_page_nav = str_replace( '<a', '<li><a', $paged_page_nav );
-    $paged_page_nav = str_replace( '</span></a>', '</a></li>', $paged_page_nav );
-    $paged_page_nav = str_replace( '"><span>', '">', $paged_page_nav );
-  // Here I'd need to wrap the currently displayed page element, which could even get a different class
-    $paged_page_nav = str_replace( '<span>', '<li>', $paged_page_nav );
-    $paged_page_nav = str_replace( '</span>', '</li>', $paged_page_nav );
-  echo $paged_page_nav;
-}
-
-/**
  * Sets the post excerpt length to 40 words.
  */
 function essence_excerpt_length( $length ) {
