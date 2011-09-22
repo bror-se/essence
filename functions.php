@@ -1,6 +1,6 @@
 <?php
 /**
- * essence functions and definitions
+ * Essence functions and definitions
  *
  * Sets up the theme and provides some helper functions. Some helper functions
  * are used in the theme as custom template tags. Others are attached to action and
@@ -10,76 +10,50 @@
  * @subpackage Essence
  */
 
-global $wpdb;
-
-define( 'THEME_NAME', 'essence' );
-define( 'THEME_URL', get_template_directory_uri() );
-define( 'THEME_CSS_DIR', THEME_URL . '/css' );
-define( 'THEME_JS_DIR', THEME_URL . '/js' );
-define( 'THEME_IMG_DIR', THEME_URL . '/img' );
-define( 'THEME_FONT_DIR', THEME_URL . '/font' );
-
-require_once( dirname( __FILE__ ) . '/inc/essence-cleanup.php' );      # Code cleanup/removal
-require_once( dirname( __FILE__ ) . '/inc/essence-htaccess.php' );     # Rewrites and h5bp htaccess
 
 /**
- * Tell WordPress to run essence_setup() when the 'after_setup_theme' hook is run.
+ * Load necessary files
  */
-add_action( 'after_setup_theme', 'essence_setup' );
+require_once get_template_directory() . '/inc/essence-cleanup.php';     # Code cleanup/removal
+require_once get_template_directory() . '/inc/essence-htaccess.php';    # Rewrites and h5bp htaccess
+require_once get_template_directory() . '/inc/essence-widget.php';      # Add custom WP_Widgets
 
-if ( ! function_exists( 'essence_setup' ) ):
 /**
  * Sets up theme defaults and registers support for various WordPress features.
  */
 function essence_setup() {
   // Make Essense available for translation.
   // Translations can be added to the /lang/ directory.
-  load_theme_textdomain( THEME_NAME, get_template_directory() . '/languages' );
+  load_theme_textdomain('essence', get_template_directory() . '/lang');
 
-  // This theme styles the visual editor with editor-style.css to match the theme style.
+  // Tell the TinyMCE editor to use editor-style.css
   add_editor_style();
 
-  // Add default posts and comments RSS feed links to <head>.
-  add_theme_support( 'automatic-feed-links' );
-
-  // Add support for custom backgrounds
-  add_custom_background();
-
-  // Add support for menus.
-  add_theme_support( 'menus' );
-
-  // This theme uses Featured Images (also known as post thumbnails) for per-post/per-page Custom Header images
+  // Activate thumbnails
   // http://codex.wordpress.org/Post_Thumbnails
-  add_theme_support( 'post-thumbnails' );
-  // set_post_thumbnail_size( 150, 150, false );
-
-  // This theme uses wp_nav_menu().
-  register_nav_menus( array(
-    'primary_navigation' => __( 'Primary Navigation', THEME_NAME )
-  ) );
+  add_theme_support('post-thumbnails');
+  // set_post_thumbnail_size(150, 150, false);
 
   // Add support for a variety of post formats
-  add_theme_support( 'post-formats', array(
-    'aside',
-    'link',
-    'gallery',
-    'status',
-    'quote',
-    'image'
-  ) );
+  // http://codex.wordpress.org/Post_Formats
+  // add_theme_support('post-formats', array('aside', 'gallery', 'link', 'image', 'quote', 'status', 'video', 'audio', 'chat'));
+
+  // Add support for menus and setup default menus
+  add_theme_support('menus');
+  register_nav_menus(array(
+    'primary_navigation' => __('Primary Navigation', 'essence'),
+    'utility_navigation' => __('Utility Navigation', 'essence')
+  ));
 }
-endif;
+add_action('after_setup_theme', 'essence_setup');
 
 /**
  * Register our sidebars and widgetized areas.
  */
-$sidebars = array(
-  'Sidebar'
-);
-foreach ( $sidebars as $sidebar ) {
-  register_sidebar( array(
-    'name'=> $sidebar,
-    'before_widget' => '<section>',
+$sidebars = array('Sidebar', 'Footer');
+foreach ($sidebars as $sidebar) {
+  register_sidebar(array('name'=> $sidebar,
+    'before_widget' => '<section id="%1$s" class="widget %2$s">',
     'after_widget' => '</section>',
     'before_title' => '<h1>',
     'after_title' => '</h1>'
@@ -87,93 +61,118 @@ foreach ( $sidebars as $sidebar ) {
 }
 
 /**
- * Return the URL for the first link found in the post content.
- */
-function essence_url_grabber() {
-  if ( ! preg_match( '/<a\s[^>]*?href=[\'"](.+?)[\'"]/is', get_the_content(), $matches ) )
-    return false;
-
-  return esc_url_raw( $matches[1] );
-}
-
-if ( ! function_exists( 'essence_posted_on' ) ) :
-/**
- * Prints HTML with meta information for the current post-date/time and author.
- * Create your own essence_posted_on to override in a child theme
- */
-function essence_posted_on() {
-  printf( __( 'Posted on <a href="%1$s" title="%2$s" rel="bookmark"><time datetime="%3$s" pubdate>%4$s</time></a> by <a href="%5$s" title="%6$s" rel="author">%7$s</a>', THEME_NAME ),
-    esc_url( get_permalink() ),
-    esc_attr( get_the_time() ),
-    esc_attr( get_the_date( 'c' ) ),
-    esc_html( get_the_date() ),
-    esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
-    sprintf( esc_attr__( 'View all posts by %s', THEME_NAME ), get_the_author() ),
-    esc_html( get_the_author() )
-  );
-}
-endif;
-
-/**
  * Display navigation to next/previous pages when applicable
  */
 function essence_content_nav() {
   global $wp_query;
 
-  if ( $wp_query->max_num_pages > 1 ) : ?>
+  if ($wp_query->max_num_pages > 1) : ?>
     <nav>
+      <h1><?php _e('Post navigation', 'essence'); ?></h1>
       <ul>
-        <li><?php next_posts_link( __( '&larr; Older posts', THEME_NAME ) ); ?></li>
-        <li><?php previous_posts_link( __( 'Newer posts &rarr;', THEME_NAME ) ); ?></li>
+        <li><?php next_posts_link(__('&larr; Older posts', 'essence')); ?></li>
+        <li><?php previous_posts_link(__('Newer posts &rarr;', 'essence')); ?></li>
       </ul>
     </nav>
   <?php endif;
 }
 
 /**
- * Sets the post excerpt length to 40 words.
+ * Customized wp_link_pages for better markup
+ * Use do_action( 'essence_link_pages' );
  */
-function essence_excerpt_length( $length ) {
-  return 40;
+function essence_link_pages($args = array ()) {
+  $paged_page_nav = wp_link_pages(array(
+    'before' =>'<nav><ul>',
+    'after' => '</ul></nav>',
+    'link_before' => '<span>',
+    'link_after' => '</span>',
+    'next_or_number' => 'next',
+    'echo' => false
+  ));
+  // Now let's wrap the nav inside <li>-elements
+    $paged_page_nav = str_replace('<a', '<li><a', $paged_page_nav);
+    $paged_page_nav = str_replace('</span></a>', '</a></li>', $paged_page_nav);
+    $paged_page_nav = str_replace('"><span>', '">', $paged_page_nav);
+  // Here we need to wrap the currently displayed page element, which could even get a different class
+    $paged_page_nav = str_replace('<span>', '<li>', $paged_page_nav);
+    $paged_page_nav = str_replace('</span>', '</li>', $paged_page_nav);
+  echo $paged_page_nav;
 }
-add_filter( 'excerpt_length', 'essence_excerpt_length' );
 
 /**
- * Returns a "Continue Reading" link for excerpts
+ * Return post entry meta information
  */
-function essence_continue_reading_link() {
-  return '<a href="'. esc_url( get_permalink() ) . __( 'Continue reading &rarr;', THEME_NAME ) . '</a>';
+function essence_entry_meta() {
+  echo '<time class="updated" datetime="'. get_the_time('c') .'" pubdate>'. sprintf(__('Posted on %s at %s.', 'essence'), get_the_time('l, F jS, Y'), get_the_time()) .'</time>';
+  echo '<p class="byline author vcard">'. __('Written by', 'essence') .' <a href="'. get_author_posts_url(get_the_author_meta('id')) .'" rel="author" class="fn">'. get_the_author() .'</a></p>';
 }
 
 /**
- * Replaces "[...]" (appended to automatically generated excerpts) with an ellipsis and essence_continue_reading_link().
+ * Template for comments and pingbacks.
+ *
+ * To override this walker in a child theme without modifying the comments template
+ * simply create your own essence_comment(), and that function will be used instead.
+ *
+ * Used as a callback by wp_list_comments() for displaying the comments.
  */
-function essence_auto_excerpt_more( $more ) {
-  return '&hellip;' . essence_continue_reading_link();
+if (! function_exists('essence_comment')) :
+function essence_comment($comment, $args, $depth) {
+  $GLOBALS['comment'] = $comment;
+  switch ($comment->comment_type) :
+    case 'pingback' :
+    case 'trackback' :
+  ?>
+  <li class="post pingback">
+    <p><?php _e('Pingback:', 'essence'); ?> <?php comment_author_link(); ?><?php edit_comment_link(__('Edit', 'essence'), '<span class="edit-link">', '</span>'); ?></p>
+  <?php
+      break;
+    default :
+  ?>
+  <li <?php comment_class(); ?> id="li-comment-<?php comment_ID(); ?>">
+    <article id="comment-<?php comment_ID(); ?>" class="comment">
+      <footer class="comment-meta">
+        <div class="comment-author vcard">
+          <?php
+            $avatar_size = 68;
+            if ('0' != $comment->comment_parent)
+              $avatar_size = 39;
+
+            echo get_avatar($comment, $avatar_size);
+
+            /* translators: 1: comment author, 2: date and time */
+            printf(__('%1$s on %2$s <span class="says">said:</span>', 'essence'),
+              sprintf('<span class="fn">%s</span>', get_comment_author_link()),
+              sprintf('<a href="%1$s"><time pubdate datetime="%2$s">%3$s</time></a>',
+                esc_url(get_comment_link( $comment->comment_ID)),
+                get_comment_time('c'),
+                /* translators: 1: date, 2: time */
+                sprintf(__('%1$s at %2$s', 'essence'), get_comment_date(), get_comment_time())
+              )
+            );
+          ?>
+
+          <?php edit_comment_link(__('Edit', 'essence'), '<span class="edit-link">', '</span>'); ?>
+        </div>
+
+        <?php if ($comment->comment_approved == '0') : ?>
+          <em class="comment-awaiting-moderation"><?php _e('Your comment is awaiting moderation.', 'essence'); ?></em>
+          <br />
+        <?php endif; ?>
+
+      </footer>
+
+      <div class="comment-content"><?php comment_text(); ?></div>
+
+      <div class="reply">
+        <?php comment_reply_link(array_merge($args, array('reply_text' => __('Reply <span>&darr;</span>', 'essence'), 'depth' => $depth, 'max_depth' => $args['max_depth']))); ?>
+      </div>
+    </article>
+
+  <?php
+      break;
+  endswitch;
 }
-add_filter( 'excerpt_more', 'essence_auto_excerpt_more' );
-
-/**
- * Adds a pretty "Continue Reading" link to custom post excerpts.
- */
-function essence_custom_excerpt_more( $output ) {
-  if ( has_excerpt() && ! is_attachment() ) {
-    $output .= essence_continue_reading_link();
-  }
-  return $output;
-}
-add_filter( 'get_the_excerpt', 'essence_custom_excerpt_more' );
-
-/**
- * Add custom classes to body
- */
-function essence_body_classes( $classes ) {
-
-  if ( is_singular() && ! is_home() )
-    $classes[] = 'singular';
-
-  return $classes;
-}
-add_filter( 'body_class', 'essence_body_classes' );
+endif;
 
 ?>

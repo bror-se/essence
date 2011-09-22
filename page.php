@@ -16,10 +16,8 @@ get_header(); ?>
   <div role="main">
 
     <?php the_post(); ?>
-
-    <?php get_template_part( 'loop', 'page' ); ?>
-
-    <?php comments_template( '', true ); ?>
+    <?php get_template_part('loop', 'page'); ?>
+    <?php comments_template('', true); ?>
 
   </div>
 

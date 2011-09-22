@@ -7,5 +7,5 @@
  */
 ?>
   <aside role="complementary">
-    <?php dynamic_sidebar( 'Sidebar' ); ?>
+    <?php dynamic_sidebar('Sidebar'); ?>
   </aside>

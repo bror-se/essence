@@ -14,11 +14,11 @@
 
 # find project root (also ensure script is ran from within repo)
 src=$(git rev-parse --show-toplevel) || {
-  echo "try running the script from within essence directories." >&2
+  echo "try running the script from within html5-boilerplate directories." >&2
   exit 1
 }
 [[ -d $src ]] || {
-  echo "fatal: could not determine essence's root directory." >&2
+  echo "fatal: could not determine html5-boilerplate's root directory." >&2
   echo "try updating git." >&2
   exit 1
 }
@@ -26,7 +26,7 @@ src=$(git rev-parse --show-toplevel) || {
 # get a name for new project
 while [[ -z $name ]]
 do
-    echo "To create a new essence project, enter a new directory name:"
+    echo "To create a new html5-boilerplate project, enter a new directory name:"
     read name || exit
 done
 dst=$src/../$name
@@ -36,15 +36,15 @@ then
     echo "$dst exists"
 else
     #create new project
-    mkdir -- "$dst" || exit 1
+    mkdir -p -- "$dst" || exit 1
 
-    #sucess message
+    #success message
     echo "Created Directory: $dst"
 
     cd -- "$src"
-    cp -vr -- inc css js img build test *.php *.html *.xml *.txt *.png *.ico style.css editor-style.css .gitignore .gitattributes .htaccess "$dst"
+    cp -vr -- css js img build test *.html *.xml *.txt *.png *.ico .htaccess "$dst"
 
-    #sucess message
+    #success message
     echo "Created Project: $dst"
 fi
 
