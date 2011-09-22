@@ -10,7 +10,7 @@
 
   <header>
     <h1><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h1>
-    <?php roots_entry_meta(); ?>
+    <?php essence_entry_meta(); ?>
   </header>
 
   <?php if (is_archive() || is_search()) : // Only display Excerpts for Archive and Search ?>
