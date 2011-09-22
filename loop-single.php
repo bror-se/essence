@@ -10,7 +10,7 @@
 
   <header>
     <h1><?php the_title(); ?></h1>
-    <?php roots_entry_meta(); ?>
+    <?php essence_entry_meta(); ?>
   </header>
 
   <?php the_content(); ?>
