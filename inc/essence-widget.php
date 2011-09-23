@@ -4,7 +4,7 @@ class essence_vcard extends WP_Widget {
 
   function essence_vcard() {
     $widget_ops = array('description' => 'Display a vCard');
-    parent::WP_Widget(false, __('essence: vCard', 'essence'), $widget_ops);
+    parent::WP_Widget(false, __('vCard', 'essence'), $widget_ops);
   }
 
   function widget($args, $instance) {
