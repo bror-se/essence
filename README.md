@@ -1,32 +1,34 @@
 # Essence Wordpress Theme
 
-## Summary:
+Essence is a professional barebones theme for Wordpress that's based on [HTML5 Boilerplate](http://www.html5boilerplate.com/). It includes functions for cleaner HTML output and a build script to automate the minification and concatenation of your HTML/CSS/JS.
 
-This is a barebones theme for Wordpress that's based on [HTML5 Boilerplate](http://www.html5boilerplate.com/). It's much similar to the [Roots Theme](http://www.rootstheme.com/) but without default styling and CSS frameworks.
+## Quick start
 
-* HTML5 ready. Use the new tags with certainty.
-* Build script included. Use the build script out of the box. No Wordpress specific configurations needed!
-* Normalized css that makes browsers render all elements more consistently and in line with modern standards.
-* No more ugly Wordpress URLs. URLs are relative and rewritten.
+Clone the git repo - `git clone git://github.com/kevva/essence.git` - or [download it](https://github.com/kevva/essence/zipball/master)
 
-## Changelog:
+## Features
 
-### v.1.0 - August 11th, 2011
+* HTML5 ready. Use the new elements with confidence.
+* Cross-browser compatible (Chrome, Opera, Safari, Firefox 3.6+, IE6+).
+* "Mobile first"/"Responsive design"-capable out of the box.
+* Clean URLs (no more `/wp-content/`)
+* All static theme assets are rewritten to the website root (`/css/`, `/img/`, and `/js/`)
+* Posts use the hNews microformat
+* Apache server caching, compression, and other configuration defaults for Grade-A performance.
+* A build script to automate the minification and concatenation of your HTML/CSS/JS.
+* Robots.txt optimized for SEO
 
-* Build script is now faster and support @import inling
-* Adding respond.js
-* Chrome Frame for IE6
-* Small fixes to root relative URLs and clean assets
-* Code cleanup and re-organization
+## Contributing
 
-### v.0.9 - August 2nd, 2011
+Anyone and everyone is welcome to contribute. There are several ways you can help out:
 
-* Integrated HTML5 Boilerplate</li>
-* Stripped off and included features from the Roots Theme</li>
+1. Raising [issues](https://github.com/kevva/essence/issues) on GitHub.
+2. Sending pull requests for bug fixes or new features and improvements.
+3. Making the [docs](https://github.com/kevva/essence/wiki) better.
 
-## Licence:
+## License:
 
-Major components:
+###Major components:
 
 * HTML5 Boilerplate: [The Unlicense](http://unlicense.org)
 * Roots Theme: [The Unlicense](http://unlicense.org)
@@ -34,6 +36,6 @@ Major components:
 * Modernizr: [MIT/BSD license](http://www.modernizr.com/license/)
 * jQuery: [MIT/GPL license](http://jquery.org/license/)
 
-Everything else:
+###Everything else:
 
 * [The Unlicense](http://unlicense.org)
