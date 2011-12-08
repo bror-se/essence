@@ -6,17 +6,17 @@
  * @subpackage Essence
  */
 ?>
-<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 
-  <header>
-    <h1><?php the_title(); ?></h1>
+<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+  <header class="entry-header">
+    <h1 class="entry-title"><?php the_title(); ?></h1>
   </header>
 
-  <?php the_content(); ?>
-  <?php essence_link_pages(); ?>
-
-  <footer>
-    <?php edit_post_link(__('Edit', 'essence')); ?>
+  <div class="entry-content">
+    <?php the_content(); ?>
+    <?php wp_link_pages(array('before' => '<div class="page-link"><span>' . __('Pages:', 'essence') . '</span>', 'after' => '</div>')); ?>
+  </div>
+  <footer class="entry-meta">
+    <?php edit_post_link(__('Edit', 'essence'), '<span class="edit-link">', '</span>'); ?>
   </footer>
-
 </article>

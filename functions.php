@@ -10,36 +10,45 @@
  * @subpackage Essence
  */
 
+if (!defined('__DIR__'))
+  define('__DIR__', dirname(__FILE__));
 
 /**
  * Load necessary files
  */
-require_once get_template_directory() . '/inc/essence-cleanup.php';     # Code cleanup/removal
-require_once get_template_directory() . '/inc/essence-htaccess.php';    # Rewrites and h5bp htaccess
-require_once get_template_directory() . '/inc/essence-widget.php';      # Add custom WP_Widgets
+require_once locate_template('/lib/essence-cleanup.php');   // Code cleanup
+require_once locate_template('/lib/essence-htaccess.php');  // Custom rewrites and htaccess
 
-/**
- * Sets up theme defaults and registers support for various WordPress features.
- */
 function essence_setup() {
-  // Make Essense available for translation.
+  // Make theme available for translation.
   // Translations can be added to the /lang/ directory.
   load_theme_textdomain('essence', get_template_directory() . '/lang');
 
+  $locale      = get_locale();
+  $locale_file = get_template_directory() . "/lang/$locale.php";
+  if (is_readable($locale_file))
+    require_once($locale_file);
+
   // Tell the TinyMCE editor to use editor-style.css
-  add_editor_style();
+  add_editor_style('');
 
   // Activate thumbnails
   // http://codex.wordpress.org/Post_Thumbnails
   add_theme_support('post-thumbnails');
-  // set_post_thumbnail_size(150, 150, false);
 
   // Add support for a variety of post formats
   // http://codex.wordpress.org/Post_Formats
-  // add_theme_support('post-formats', array('aside', 'gallery', 'link', 'image', 'quote', 'status', 'video', 'audio', 'chat'));
+  add_theme_support('post-formats', array(
+    'aside',
+    'link',
+    'gallery',
+    'status',
+    'quote',
+    'image'
+  ));
 
-  // Add support for menus and setup default menus
-  add_theme_support('menus');
+  // Setup default menus
+  // http://codex.wordpress.org/Function_Reference/register_nav_menus
   register_nav_menus(array(
     'primary_navigation' => __('Primary Navigation', 'essence'),
     'utility_navigation' => __('Utility Navigation', 'essence')
@@ -49,64 +58,68 @@ add_action('after_setup_theme', 'essence_setup');
 
 /**
  * Register our sidebars and widgetized areas.
+ * http://codex.wordpress.org/Function_Reference/register_sidebar
  */
-$sidebars = array('Sidebar', 'Footer');
-foreach ($sidebars as $sidebar) {
-  register_sidebar(array('name'=> $sidebar,
+function essence_register_sidebars() {
+  register_sidebar(array(
+    'id' => 'essence-sidebar',
+    'name' => __('Your regular sidebar', 'essence'),
+    'description' => __('Sidebar', 'essence'),
     'before_widget' => '<section id="%1$s" class="widget %2$s">',
     'after_widget' => '</section>',
-    'before_title' => '<h1>',
-    'after_title' => '</h1>'
+    'before_title' => '<h3>',
+    'after_title' => '</h3>'
+  ));
+  register_sidebar(array(
+    'id' => 'essence-footer',
+    'name' => __('Footer', 'essence'),
+    'description' => __('Your footer sidebar', 'essence'),
+    'before_widget' => '<section id="%1$s" class="widget %2$s">',
+    'after_widget' => '</section>',
+    'before_title' => '<h3>',
+    'after_title' => '</h3>'
   ));
 }
+add_action('widgets_init', 'essence_register_sidebars');
 
 /**
  * Display navigation to next/previous pages when applicable
  */
-function essence_content_nav() {
-  global $wp_query;
+if (!function_exists('essence_content_nav')):
+  function essence_content_nav($nav_id) {
+    global $wp_query;
 
-  if ($wp_query->max_num_pages > 1) : ?>
-    <nav>
-      <h1><?php _e('Post navigation', 'essence'); ?></h1>
-      <ul>
-        <li><?php next_posts_link(__('&larr; Older posts', 'essence')); ?></li>
-        <li><?php previous_posts_link(__('Newer posts &rarr;', 'essence')); ?></li>
-      </ul>
-    </nav>
-  <?php endif;
+    if ($wp_query->max_num_pages > 1): ?>
+      <nav id="<?php echo $nav_id; ?>">
+        <h3><?php _e('Post navigation', 'essence'); ?></h3>
+        <div class="previous"><?php next_posts_link(__('&larr; Older posts', 'essence')); ?></div>
+        <div class="next"><?php previous_posts_link(__('Newer posts &rarr;', 'essence')); ?></div>
+      </nav>
+   <?php endif;
+  }
+endif;
+
+/**
+ * Return the URL for the first link found in the post content.
+ *
+ * @return string|bool URL or false when no link is present.
+ */
+function essence_url_grabber() {
+  if (!preg_match('/<a\s[^>]*?href=[\'"](.+?)[\'"]/is', get_the_content(), $matches))
+    return false;
+
+  return esc_url_raw($matches[1]);
 }
 
 /**
- * Customized wp_link_pages for better markup
- * Use do_action( 'essence_link_pages' );
+ * Prints HTML with meta information for the current post-date/time and author.
+ * Create your own essence_entry_meta to override in a child theme
  */
-function essence_link_pages($args = array ()) {
-  $paged_page_nav = wp_link_pages(array(
-    'before' =>'<nav><ul>',
-    'after' => '</ul></nav>',
-    'link_before' => '<span>',
-    'link_after' => '</span>',
-    'next_or_number' => 'next',
-    'echo' => false
-  ));
-  // Now let's wrap the nav inside <li>-elements
-    $paged_page_nav = str_replace('<a', '<li><a', $paged_page_nav);
-    $paged_page_nav = str_replace('</span></a>', '</a></li>', $paged_page_nav);
-    $paged_page_nav = str_replace('"><span>', '">', $paged_page_nav);
-  // Here we need to wrap the currently displayed page element, which could even get a different class
-    $paged_page_nav = str_replace('<span>', '<li>', $paged_page_nav);
-    $paged_page_nav = str_replace('</span>', '</li>', $paged_page_nav);
-  echo $paged_page_nav;
-}
-
-/**
- * Return post entry meta information
- */
-function essence_entry_meta() {
-  echo '<time class="updated" datetime="'. get_the_time('c') .'" pubdate>'. sprintf(__('Posted on %s at %s.', 'essence'), get_the_time('l, F jS, Y'), get_the_time()) .'</time>';
-  echo '<p class="byline author vcard">'. __('Written by', 'essence') .' <a href="'. get_author_posts_url(get_the_author_meta('id')) .'" rel="author" class="fn">'. get_the_author() .'</a></p>';
-}
+if (!function_exists('essence_entry_meta')):
+  function essence_entry_meta() {
+    printf(__('<span class="sep">Posted on </span><a href="%1$s" title="%2$s" rel="bookmark"><time class="entry-date" datetime="%3$s" pubdate>%4$s</time></a><span class="by-author"> <span class="sep"> by </span> <span class="author vcard"><a class="url fn n" href="%5$s" title="%6$s" rel="author">%7$s</a></span></span>', 'essence'), esc_url(get_permalink()), esc_attr(get_the_time()), esc_attr(get_the_date('c')), esc_html(get_the_date()), esc_url(get_author_posts_url(get_the_author_meta('ID'))), sprintf(esc_attr__('View all posts by %s', 'essence'), get_the_author()), esc_html(get_the_author()));
+  }
+endif;
 
 /**
  * Template for comments and pingbacks.
@@ -115,6 +128,7 @@ function essence_entry_meta() {
  * simply create your own essence_comment(), and that function will be used instead.
  *
  * Used as a callback by wp_list_comments() for displaying the comments.
+ *
  */
 if (! function_exists('essence_comment')) :
 function essence_comment($comment, $args, $depth) {
@@ -144,7 +158,7 @@ function essence_comment($comment, $args, $depth) {
             printf(__('%1$s on %2$s <span class="says">said:</span>', 'essence'),
               sprintf('<span class="fn">%s</span>', get_comment_author_link()),
               sprintf('<a href="%1$s"><time pubdate datetime="%2$s">%3$s</time></a>',
-                esc_url(get_comment_link( $comment->comment_ID)),
+                esc_url(get_comment_link($comment->comment_ID)),
                 get_comment_time('c'),
                 /* translators: 1: date, 2: time */
                 sprintf(__('%1$s at %2$s', 'essence'), get_comment_date(), get_comment_time())

@@ -13,13 +13,14 @@
 
 get_header(); ?>
 
-  <div role="main">
+<div role="main">
+  <?php while (have_posts()) : the_post(); ?>
 
-    <?php the_post(); ?>
     <?php get_template_part('loop', 'page'); ?>
     <?php comments_template('', true); ?>
 
-  </div>
+  <?php endwhile; // End of the loop ?>
+</div>
 
 <?php get_sidebar(); ?>
 <?php get_footer(); ?>

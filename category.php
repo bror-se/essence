@@ -1,12 +1,6 @@
 <?php
 /**
- * The main template file.
- *
- * This is the most generic template file in a WordPress theme
- * and one of the two required files for a theme (the other being style.css).
- * It is used to display a page when nothing more specific matches a query.
- * E.g., it puts together the home page when no home.php file exists.
- * Learn more: http://codex.wordpress.org/Template_Hierarchy
+ * The template for displaying Category Archive pages.
  *
  * @package WordPress
  * @subpackage Essence
@@ -16,6 +10,18 @@ get_header(); ?>
 
 <div role="main">
   <?php if (have_posts()) : ?>
+
+    <header class="page-header">
+      <h1 class="page-title"><?php
+        printf(__('Category Archives: %s', 'essence'), '<span>' . single_cat_title('', false) . '</span>');
+      ?></h1>
+
+      <?php
+        $category_description = category_description();
+        if (! empty($category_description))
+          echo apply_filters('category_archive_meta', '<div class="category-archive-meta">' . $category_description . '</div>');
+      ?>
+    </header>
 
     <?php /* Start the Loop */ ?>
     <?php while (have_posts()) : the_post(); ?>
