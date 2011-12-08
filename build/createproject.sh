@@ -46,7 +46,7 @@ fi
 # get a name for new project from input
 while [[ -z $name ]]
 do
-    echo "To create a new html5-boilerplate project, enter a new directory name:"
+    echo "To create a new Essence project, enter a new directory name:"
     read name || exit
 done
 
@@ -68,7 +68,7 @@ else
     echo "Created Directory: $dst"
 
     cd -- "$src"
-    cp -vr -- css js img build test *.html *.xml *.txt *.png *.ico .htaccess "$dst"
+    cp -vr -- css js img build lib lang *.php *.html *.xml *.txt *.png *.ico editor-style.css style.css .htaccess "$dst"
 
     #success message
     echo "Created Project: $dst"
