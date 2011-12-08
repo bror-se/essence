@@ -2,8 +2,6 @@
 /**
  * Essence htaccess
  *
- * Add rewrites and our custom htaccess to Wordpress
- *
  * @package Wordpress
  * @subpackage Essence
  */
@@ -17,7 +15,8 @@ if (stristr($_SERVER['SERVER_SOFTWARE'], 'apache') !== false) {
       if (current_user_can('administrator')) {
         add_action('admin_notices', create_function('', "echo '<div class=\"error\"><p>" . sprintf(__('Please make sure your <a href="%s">.htaccess</a> file is writable ', 'essence'), admin_url('options-permalink.php')) . "</p></div>';"));
       }
-    };
+    }
+    ;
   }
   add_action('admin_init', 'essence_htaccess_writable');
 
@@ -30,29 +29,16 @@ if (stristr($_SERVER['SERVER_SOFTWARE'], 'apache') !== false) {
   }
 
   /**
-   * Set the permalink structure to /year/postname/
-   */
-  if (get_option('permalink_structure') != '/%year%/%postname%/') {
-    update_option('permalink_structure', '/%year%/%postname%/');
-  }
-
-  /**
-   * Set upload folder to /assets/.
-   */
-  update_option('uploads_use_yearmonth_folders', 0);
-  update_option('upload_path', 'assets');
-
-  /**
-   * Apply rewrites
+   * Add rewrites
    */
   function essence_add_rewrites($content) {
     $theme_name = next(explode('/themes/', get_stylesheet_directory()));
     global $wp_rewrite;
     $essence_new_non_wp_rules = array(
-      'css/(.*)'      => 'wp-content/themes/'. $theme_name . '/css/$1',
-      'js/(.*)'       => 'wp-content/themes/'. $theme_name . '/js/$1',
-      'img/(.*)'      => 'wp-content/themes/'. $theme_name . '/img/$1',
-      'plugins/(.*)'  => 'wp-content/plugins/$1'
+      'css/(.*)' => 'wp-content/themes/' . $theme_name . '/css/$1',
+      'js/(.*)' => 'wp-content/themes/' . $theme_name . '/js/$1',
+      'img/(.*)' => 'wp-content/themes/' . $theme_name . '/img/$1',
+      'plugins/(.*)' => 'wp-content/plugins/$1'
     );
     $wp_rewrite->non_wp_rules += $essence_new_non_wp_rules;
   }
@@ -62,21 +48,21 @@ if (stristr($_SERVER['SERVER_SOFTWARE'], 'apache') !== false) {
    * Apply new path to assets
    */
   function essence_clean_assets($content) {
-      $theme_name = next(explode('/themes/', $content));
-      $current_path = '/wp-content/themes/' . $theme_name;
-      $new_path = '';
-      $content = str_replace($current_path, $new_path, $content);
-      return $content;
+    $theme_name   = next(explode('/themes/', $content));
+    $current_path = '/wp-content/themes/' . $theme_name;
+    $new_path     = '';
+    $content      = str_replace($current_path, $new_path, $content);
+    return $content;
   }
 
   /**
-   * Apply new plugins
+   * Apply new path to plugins
    */
   function essence_clean_plugins($content) {
-      $current_path = '/wp-content/plugins';
-      $new_path = '/plugins';
-      $content = str_replace($current_path, $new_path, $content);
-      return $content;
+    $current_path = '/wp-content/plugins';
+    $new_path     = '/plugins';
+    $content      = str_replace($current_path, $new_path, $content);
+    return $content;
   }
 
   /**
@@ -95,26 +81,22 @@ if (stristr($_SERVER['SERVER_SOFTWARE'], 'apache') !== false) {
   }
 
   /**
-   * Write new htaccess
+   * Add custom htaccess to Wordpress
    */
-  function essence_add_h5bp_htaccess($rules) {
+  function essence_add_htaccess($rules) {
     global $wp_filesystem;
 
-    if (!defined('FS_METHOD')) define('FS_METHOD', 'direct');
-    if (is_null($wp_filesystem)) WP_Filesystem(array(), ABSPATH);
+    if (!defined('FS_METHOD'))
+      define('FS_METHOD', 'direct');
+    if (is_null($wp_filesystem))
+      WP_Filesystem(array(), ABSPATH);
 
-    if (!defined('WP_CONTENT_DIR'))
-    define('WP_CONTENT_DIR', ABSPATH . 'wp-content');
+    $filename = __DIR__ . '/essence-htaccess';
 
-    $theme_name = next(explode('/themes/', get_template_directory()));
-    $filename = WP_CONTENT_DIR . '/themes/' . $theme_name . '/inc/essence-htaccess.htaccess';
-
-    $rules .= $wp_filesystem->get_contents($filename);
-
-    return $rules;
+    return $rules . $wp_filesystem->get_contents($filename);
   }
+  add_filter('mod_rewrite_rules', 'essence_add_htaccess');
 
-  add_action('mod_rewrite_rules', 'essence_add_h5bp_htaccess');
 }
 
 ?>
