@@ -14,7 +14,7 @@
   if (! is_404())
     get_sidebar('footer');
   ?>
-  <a href="<?php echo esc_url(__('http://wordpress.org/', 'essence')); ?>" title="<?php esc_attr_e('Semantic Personal Publishing Platform', 'essence'); ?>" rel="generator"><?php printf( __('Proudly powered by %s', 'essence'), 'WordPress'); ?></a>
+  <a href="<?php echo esc_url(__('http://wordpress.org/', 'essence')); ?>" title="<?php esc_attr_e('Semantic Personal Publishing Platform', 'essence'); ?>"><?php printf( __('Proudly powered by %s', 'essence'), 'WordPress'); ?></a>
 </footer>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
