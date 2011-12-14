@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-#Generate a new project from your HTML5 Boilerplate repo clone
+#Generate a new project from your Essence repo clone
 #by: Rick Waldron & Michael Cetrulo
 
 
 ##first run
-# $ cd  html5-boilerplate/build
+# $ cd  essence/build
 # $ chmod +x createproject.sh && ./createproject.sh [new_project]
 
 ##usage
-# $ cd  html5-boilerplate/build
+# $ cd  essence/build
 # $ ./createproject.sh [new_project]
 
 #
@@ -20,7 +20,7 @@
 # in.
 #
 # If the new project is specified as just a name ( "foo" ) then the path
-# will be a sibling to html5-boilerplate's directory.
+# will be a sibling to essence's directory.
 #
 # If the new project is specified with an absolute path ( "/home/user/foo" )
 # that path will be used.
@@ -28,11 +28,11 @@
 
 # find project root (also ensure script is ran from within repo)
 src=$(git rev-parse --show-toplevel) || {
-  echo "try running the script from within html5-boilerplate directories." >&2
+  echo "try running the script from within essence directories." >&2
   exit 1
 }
 [[ -d $src ]] || {
-  echo "fatal: could not determine html5-boilerplate's root directory." >&2
+  echo "fatal: could not determine essence's root directory." >&2
   echo "try updating git." >&2
   exit 1
 }
