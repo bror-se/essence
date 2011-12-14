@@ -68,7 +68,7 @@ else
     echo "Created Directory: $dst"
 
     cd -- "$src"
-    cp -vr -- css js img build lib lang *.php *.html *.xml *.txt *.png *.ico editor-style.css style.css .htaccess "$dst"
+    cp -vr -- css js img build lib lang *.php *.html *.xml *.txt *.png *.ico editor-style.css style.css "$dst"
 
     #success message
     echo "Created Project: $dst"
