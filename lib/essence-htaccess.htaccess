@@ -51,15 +51,19 @@
 # CORS-enabled images (@crossorigin)
 # ----------------------------------------------------------------------
 
-# Send CORS headers if browsers request them; enabled by default.
+# Send CORS headers if browsers request them; enabled by default for images.
 # developer.mozilla.org/en/CORS_Enabled_Image
 # blog.chromium.org/2011/07/using-cross-domain-images-in-webgl-and.html
 # hacks.mozilla.org/2011/11/using-cors-to-load-webgl-textures-from-cross-domain-images/
+# wiki.mozilla.org/Security/Reviews/crossoriginAttribute
 
 <IfModule mod_setenvif.c>
   <IfModule mod_headers.c>
-    SetEnvIf Origin ":" IS_CORS
-    Header set Access-Control-Allow-Origin "*" env=IS_CORS
+    # mod_headers, y u no match by Content-Type?!
+    <FilesMatch "\.(gif|png|jpe?g|svg|svgz|ico|webp)$">
+      SetEnvIf Origin ":" IS_CORS
+      Header set Access-Control-Allow-Origin "*" env=IS_CORS
+    </FilesMatch>
   </IfModule>
 </IfModule>
 
@@ -330,6 +334,18 @@ FileETag None
 
 
 # ----------------------------------------------------------------------
+# Apache Performance Tuning
+# ----------------------------------------------------------------------
+
+# Without -SymLinksIfOwnerMatch Apache will have to issue extra system calls to check up on symlinks.
+# For highest performance and no symlink protection set +FollowSymLinks and -SymLinksIfOwnerMatch
+# httpd.apache.org/docs/current/misc/perf-tuning.html#symlinks
+
+Options -SymLinksIfOwnerMatch
+
+
+
+# ----------------------------------------------------------------------
 # Suppress or force the "www." at the beginning of URLs
 # ----------------------------------------------------------------------
 
@@ -433,7 +449,7 @@ ErrorDocument 404 /404.html
 AddDefaultCharset utf-8
 
 # Force UTF-8 for a number of file formats
-AddCharset utf-8 .html .css .js .xml .json .rss .atom
+AddCharset utf-8 .css .js .xml .json .rss .atom
 
 
 
@@ -466,7 +482,7 @@ AddCharset utf-8 .html .css .js .xml .json .rss .atom
 # Block access to backup and source files
 # This files may be left by some text/html editors and
 # pose a great security danger, when someone can access them
-<FilesMatch ".(bak|config|sql|fla|psd|ini|log|sh|inc|~|swp)$">
+<FilesMatch "\.(bak|config|sql|fla|psd|ini|log|sh|inc|~|swp)$">
   Order allow,deny
   Deny from all
   Satisfy All
