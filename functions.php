@@ -61,26 +61,20 @@ add_action('after_setup_theme', 'essence_setup');
  * http://codex.wordpress.org/Function_Reference/register_sidebar
  */
 function essence_register_sidebars() {
-  register_sidebar(array(
-    'id' => 'essence-sidebar',
-    'name' => __('Your regular sidebar', 'essence'),
-    'description' => __('Sidebar', 'essence'),
-    'before_widget' => '<section id="%1$s" class="widget %2$s">',
-    'after_widget' => '</section>',
-    'before_title' => '<h3>',
-    'after_title' => '</h3>'
-  ));
-  register_sidebar(array(
-    'id' => 'essence-footer',
-    'name' => __('Footer', 'essence'),
-    'description' => __('Your footer sidebar', 'essence'),
-    'before_widget' => '<section id="%1$s" class="widget %2$s">',
-    'after_widget' => '</section>',
-    'before_title' => '<h3>',
-    'after_title' => '</h3>'
-  ));
+  $sidebars = array('Sidebar', 'Footer');
+
+  foreach($sidebars as $sidebar) {
+    register_sidebar(array(
+      'id'=> 'essence-' . strtolower($sidebar),
+      'name' => __($sidebar, 'essence'),
+      'description' => __($sidebar, 'essence'),
+      'before_widget' => '<section id="%1$s" class="widget %2$s">',
+      'after_widget' => '</div></section>',
+      'before_title' => '<h3>',
+      'after_title' => '</h3>'
+    ));
+  }
 }
-add_action('widgets_init', 'essence_register_sidebars');
 
 /**
  * Display navigation to next/previous pages when applicable
