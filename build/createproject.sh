@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-#Generate a new project from your Essence repo clone
+#Generate a new project from your HTML5 Boilerplate repo clone
 #by: Rick Waldron & Michael Cetrulo
 
 
 ##first run
-# $ cd  essence/build
+# $ cd  html5-boilerplate/build
 # $ chmod +x createproject.sh && ./createproject.sh [new_project]
 
 ##usage
-# $ cd  essence/build
+# $ cd  html5-boilerplate/build
 # $ ./createproject.sh [new_project]
 
 #
@@ -20,7 +20,7 @@
 # in.
 #
 # If the new project is specified as just a name ( "foo" ) then the path
-# will be a sibling to essence's directory.
+# will be a sibling to html5-boilerplate's directory.
 #
 # If the new project is specified with an absolute path ( "/home/user/foo" )
 # that path will be used.
@@ -28,11 +28,11 @@
 
 # find project root (also ensure script is ran from within repo)
 src=$(git rev-parse --show-toplevel) || {
-  echo "try running the script from within essence directories." >&2
+  echo "try running the script from within html5-boilerplate directories." >&2
   exit 1
 }
 [[ -d $src ]] || {
-  echo "fatal: could not determine essence's root directory." >&2
+  echo "fatal: could not determine html5-boilerplate's root directory." >&2
   echo "try updating git." >&2
   exit 1
 }
@@ -46,7 +46,7 @@ fi
 # get a name for new project from input
 while [[ -z $name ]]
 do
-    echo "To create a new Essence project, enter a new directory name:"
+    echo "To create a new html5-boilerplate project, enter a new directory name:"
     read name || exit
 done
 
@@ -68,7 +68,7 @@ else
     echo "Created Directory: $dst"
 
     cd -- "$src"
-    cp -vr -- css js img build lib lang *.php *.html *.xml *.txt *.png *.ico editor-style.css style.css "$dst"
+    cp -vr -- css js img build *.html *.xml *.txt *.png *.ico .htaccess "$dst"
 
     #success message
     echo "Created Project: $dst"
