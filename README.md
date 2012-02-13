@@ -13,9 +13,7 @@ Clone the git repo - `git clone git://github.com/kevva/essence.git` - or [downlo
 * "Mobile first"/"Responsive design"-capable out of the box.
 * Clean URLs (no more `/wp-content/`)
 * All static theme assets are rewritten to the website root (`/css/`, `/img/`, and `/js/`)
-* Posts use the hNews microformat
 * Apache server caching, compression, and other configuration defaults for Grade-A performance.
-* A build script to automate the minification and concatenation of your HTML/CSS/JS.
 * Robots.txt optimized for SEO
 
 ## Contributing
