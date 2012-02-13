@@ -1,76 +1,102 @@
+<?php // Comment template ?>
+<?php function essence_comment($comment, $args, $depth) {
+  $GLOBALS['comment'] = $comment; ?>
+
+  <li <?php comment_class(); ?>>
+    <article class="comment-<?php comment_ID(); ?>">
+      <header class="comment-author vcard">
+        <?php echo get_avatar($comment, $size = '32'); // Get avatar ?>
+
+        <?php printf(__('<cite class="fn">%s</cite>', 'essence'), get_comment_author_link()); ?>
+        <time datetime="<?php echo comment_date('c'); ?>"><a href="<?php echo htmlspecialchars(get_comment_link($comment->comment_ID)); ?>"><?php printf(__('%1$s', 'essence'), get_comment_date(),  get_comment_time()); ?></a></time>
+
+        <?php edit_comment_link(__('(Edit)', 'essence'), '', ''); // Edit comment link?>
+      </header>
+
+      <?php if ($comment->comment_approved == '0') { ?>
+        <div class="alert alert-block fade in">
+          <a class="close" data-dismiss="alert">×</a>
+          <p><?php _e('Your comment is awaiting moderation.', 'essence'); ?></p>
+        </div>
+      <?php } ?>
+
+      <section class="comment">
+        <?php comment_text() ?>
+      </section>
+
+      <?php comment_reply_link(array_merge($args, array('depth' => $depth, 'max_depth' => $args['max_depth']))); ?>
+    </article>
+<?php } ?>
+
+<?php // If password is required ?>
+<?php if (post_password_required()) { ?>
+  <section class="comments">
+    <div class="alert alert-block fade in">
+      <a class="close" data-dismiss="alert">×</a>
+      <p><?php _e('This post is password protected. Enter the password to view comments.', 'essence'); ?></p>
+    </div>
+  </section>
 <?php
-/**
- * The template for displaying Comments.
- *
- * The area of the page that contains both current comments
- * and the comment form. The actual display of comments is
- * handled by a callback to essence_comment() which is
- * located in the functions.php file.
- *
- * @package WordPress
- * @subpackage Essence
- */
-?>
+  return;
+} ?>
 
-<div id="comments">
-  <?php if (post_password_required()) : ?>
-    <p class="nopassword"><?php _e('This post is password protected. Enter the password to view any comments.', 'essence'); ?></p>
-  </div>
-  <?php
-      /* Stop the rest of comments.php from being processed,
-       * but don't kill the script entirely -- we still have
-       * to fully load the template.
-       */
-      return;
-    endif;
-  ?>
-
-  <?php // You can start editing here -- including this comment! ?>
-
-  <?php if (have_comments()) : ?>
-    <h2 id="comments-title">
-      <?php
-        printf(_n('One thought on &ldquo;%2$s&rdquo;', '%1$s thoughts on &ldquo;%2$s&rdquo;', get_comments_number(), 'essence'),
-          number_format_i18n(get_comments_number()), '<span>' . get_the_title() . '</span>');
-      ?>
-    </h2>
-
-    <?php if (get_comment_pages_count() > 1 && get_option('page_comments')) : // are there comments to navigate through ?>
-    <nav id="comment-nav-above">
-      <h3 class="assistive-text"><?php _e('Comment navigation', 'essence'); ?></h1>
-      <div class="previous"><?php previous_comments_link(__('&larr; Older Comments', 'essence')); ?></div>
-      <div class="next"><?php next_comments_link(__('Newer Comments &rarr;', 'essence')); ?></div>
-    </nav>
-    <?php endif; // Check for comment navigation ?>
-
-    <ol class="commentlist">
-      <?php
-        /* Loop through and list the comments. Tell wp_list_comments()
-         * to use essence_comment() to format the comments.
-         * If you want to overload this in a child theme then you can
-         * define essence_comment() and that will be used instead.
-         * See essence_comment() in essence/functions.php for more.
-         */
-        wp_list_comments(array('callback' => 'essence_comment'));
-      ?>
+<?php // If there are comments to show, show 'em! ?>
+<?php if (have_comments()) { ?>
+  <section class="comments">
+    <h3><?php printf(_n('One Response to &ldquo;%2$s&rdquo;', '%1$s Responses to &ldquo;%2$s&rdquo;', get_comments_number(), 'essence'), number_format_i18n(get_comments_number()), get_the_title()); ?></h3>
+    <ol>
+      <?php wp_list_comments(array('callback' => 'essence_comment')); ?>
     </ol>
+    <?php if (get_comment_pages_count() > 1 && get_option('page_comments')) { // Are there comments to navigate through? ?>
+      <ul class="pager">
+        <li class="previous"><?php previous_comments_link(__('&larr; Older comments', 'essence')); ?></li>
+        <li class="next"><?php next_comments_link(__('Newer comments &rarr;', 'essence')); ?></li>
+      </ul>
+    <?php } ?>
+    <?php if (!comments_open() && !is_page() && post_type_supports(get_post_type(), 'comments')) { ?>
+      <div class="alert alert-block fade in">
+        <a class="close" data-dismiss="alert">×</a>
+        <p><?php _e('Comments are closed.', 'essence'); ?></p>
+      </div>
+    <?php } ?>
+  </section>
+<?php } ?>
 
-    <?php if (get_comment_pages_count() > 1 && get_option('page_comments')) : // are there comments to navigate through ?>
-    <nav id="comment-nav-below">
-      <h1 class="assistive-text"><?php _e('Comment navigation', 'essence'); ?></h1>
-      <div class="nav-previous"><?php previous_comments_link(__('&larr; Older Comments', 'essence')); ?></div>
-      <div class="nav-next"><?php next_comments_link(__('Newer Comments &rarr;', 'essence')); ?></div>
-    </nav>
-    <?php endif; // Check for comment navigation ?>
+<?php // If there ain't no comments, or if they are closed; throw an error! ?>
+<?php if (!have_comments() && !comments_open() && !is_page() && post_type_supports(get_post_type(), 'comments')) { ?>
+  <section class="comments">
+    <div class="alert alert-block fade in">
+      <a class="close" data-dismiss="alert">×</a>
+      <p><?php _e('Comments are closed.', 'essence'); ?></p>
+    </div>
+  </section>
+<?php } ?>
 
-  <?php
-    /* If there are no comments and comments are closed, let's leave a little note, shall we?
-     * But we don't want the note on pages or post types that do not support comments.
-     */
-    elseif (! comments_open() && ! is_page() && post_type_supports(get_post_type(), 'comments')) :
-  ?>
-    <p class="nocomments"><?php _e('Comments are closed.', 'essence'); ?></p>
-  <?php endif; ?>
-
-  <?php comment_form(); ?>
-</div>
+<?php // Respond form ?>
+<?php if (comments_open()) { ?>
+  <section class="respond">
+    <h3><?php comment_form_title(__('Leave a Reply', 'essence'), __('Leave a Reply to %s', 'essence')); ?></h3>
+    <p class="cancel-comment-reply"><?php cancel_comment_reply_link(); ?></p>
+    <?php if (get_option('comment_registration') && !is_user_logged_in()) { ?>
+      <p><?php printf(__('You must be <a href="%s">logged in</a> to post a comment.', 'essence'), wp_login_url(get_permalink())); ?></p>
+    <?php } else { ?>
+      <form action="<?php echo get_option('siteurl'); ?>/wp-comments-post.php" method="post" id="commentform">
+        <?php if (is_user_logged_in()) { ?>
+          <p><?php printf(__('Logged in as <a href="%s/wp-admin/profile.php">%s</a>.', 'essence'), get_option('siteurl'), $user_identity); ?> <a href="<?php echo wp_logout_url(get_permalink()); ?>" title="<?php __('Log out of this account', 'essence'); ?>"><?php _e('Log out &raquo;', 'essence'); ?></a></p>
+        <?php } else { ?>
+          <label for="author"><?php _e('Name', 'essence'); if ($req) _e(' (required)', 'essence'); ?></label>
+          <input type="text" class="text" name="author" id="author" value="<?php echo esc_attr($comment_author); ?>" size="22" tabindex="1" <?php if ($req) echo "aria-required='true'"; ?>>
+          <label for="email"><?php _e('Email (will not be published)', 'essence'); if ($req) _e(' (required)', 'essence'); ?></label>
+          <input type="email" class="text" name="email" id="email" value="<?php echo esc_attr($comment_author_email); ?>" size="22" tabindex="2" <?php if ($req) echo "aria-required='true'"; ?>>
+          <label for="url"><?php _e('Website', 'essence'); ?></label>
+          <input type="url" class="text" name="url" id="url" value="<?php echo esc_attr($comment_author_url); ?>" size="22" tabindex="3">
+        <?php } ?>
+        <label for="comment"><?php _e('Comment', 'essence'); ?></label>
+        <textarea name="comment" id="comment" class="input-xlarge" tabindex="4"></textarea>
+        <input name="submit" class="btn btn-primary" type="submit" id="submit" tabindex="5" value="<?php _e('Submit Comment', 'essence'); ?>">
+        <?php comment_id_fields(); ?>
+        <?php do_action('comment_form', $post->ID); ?>
+      </form>
+    <?php } // If registration required and not logged in ?>
+  </section>
+<?php } ?>
