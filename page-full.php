@@ -1,4 +1,8 @@
-<?php get_header(); ?>
+<?php
+/**
+ * Template Name: Full Width
+ */
+get_header(); ?>
 
 <div role="main">
   <?php while (have_posts()) : the_post(); ?>
