@@ -4,7 +4,7 @@
  */
 
 function essence_excerpt_length($length) {
-  return POST_EXCERPT_LENGTH;
+  return 40;
 }
 add_filter('excerpt_length', 'essence_excerpt_length');
 
